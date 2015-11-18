@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>My ES6 Modules</title>
+        <meta name="description" content="Using ES6 today with Broccoli and Babel">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <style>
+      .color {
+        padding: 1rem;
+        color: #fff;
+      }
+    </style>
+    <body>
+        <h1>My ES6 Modules</h1>
+
+        <div id="info">
+          </p>
+            For: [500, 1000, 500, 1000]
+          </p>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.18/require.min.js"></script>
+        <script src="guard-dog.js"></script>
+        <script>
+            requirejs.config({
+                paths: {
+                  jquery: '//code.jquery.com/jquery-2.1.4.min'
+                }
+            });
+            require(['guard-dog/math', 'jquery'], function(math, $) {
+              var numbers = [500, 1000, 500, 1000];
+              var average = math.average(numbers);
+              $('#info').append('<p> The average is: '+average+'</p>');
+            });
+        </script>
+    </body>
+</html>
