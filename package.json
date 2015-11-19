@@ -1,8 +1,8 @@
 {
-  "name": "guard-dog",
+  "name": "bouncer",
   "version": "0.0.0",
   "description": "Authorization and permission handler in JavaScript",
-  "main": "dist/guard-dog.js",
+  "main": "dist/bouncer.js",
   "scripts": {
     "start": "broccoli serve",
     "build": "rm -rf dist && broccoli build dist",
