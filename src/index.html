@@ -20,7 +20,44 @@
             });
 
             require(['bouncer', 'jquery'], function(Bouncer, $) {
-              let bouncer = new Bouncer();
+              var Authorizer = Bouncer.Authorizer;
+              var RuleBook = Bouncer.RuleBook;
+              var Rule = Bouncer.Rule;
+
+              new Rule({
+                id: 'failing-1',
+                description: 'anon, failing rule',
+                run: ( roles ) => {
+                  return roles.has('baz');
+                }
+              });
+
+              new Rule({
+                id: 'locked',
+                important: true,
+                run: () => { return false; }
+              });
+
+              var auth = new Authorizer(['foo', 'bar'], new RuleBook(function( rules ) {
+
+                this.add('can test', new Rule({
+                  run: ( roles ) => {
+                    return roles.has('foo');
+                  }
+                }));
+
+                this.add('cant test', new Rule({
+                  run: ( roles ) => {
+                    return roles.has('foo') && roles.has('baz');
+                  }
+                }));
+
+                this.add('also cant test', rules.findById('failing-1'));
+                this.add('an action that is locked', rules.findBy('id', 'locked'));
+
+              }));
+
+              window.auth = auth;
             });
 
         </script>

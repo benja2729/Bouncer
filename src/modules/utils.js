@@ -1,34 +1,30 @@
+/* global Map */
 
-export function eachKey(hash, callback) {
-  for( var key in hash ) {
-    callback(key, hash[key], hash);
+export function assert( message, assertion ) {
+  if(! assertion ) {
+    throw message instanceof Error ? message : new Error(message);
   }
-
-  return hash;
 }
 
-export function invokeEvery( fnArray, args, context=null ) {
-  for( let idx in fnArray ) {
-    let fn = fnArray[idx];
-    if(! fn.apply(context, args) ) {
-      return false;
+export function cacheProxy() {
+  let cache = new Map();
+
+  return function proxy( key, callback ) {
+    if( cache.has(key) ) {
+      return cache.get(key);
     }
-  }
 
-  return true;
+    let value = callback(key);
+    cache.set(key, value);
+
+    return value;
+  };
 }
 
-export function invokeAny( fnArray, args, context=null ) {
-  for( let idx in fnArray ) {
-    let fn = fnArray[idx];
-    if( fn.apply(context, args) ) {
-      return true;
-    }
+export function isIterable( iterable ) {
+  if( arguments.length === 0 || iterable == null ) {
+    return false;
   }
 
-  return false;
-}
-
-export function hasIntersection( ...arrays ) {
-  return true;
+  return 'function' === typeof iterable[Symbol.iterator];
 }
