@@ -7,8 +7,16 @@ export const STORE = new Store();
 export default class Rule {
   static get rules() { return STORE; }
 
+  static isRule( instance ) {
+    return instance instanceof this;
+  }
+
+  static isRuleHash( hash ) {
+    return 'object' === typeof hash && !this.isRule(hash) && 'function' === typeof hash.run;
+  }
+
   constructor( hash ) {
-    assert('The hash sent to Rule#constructor must have a "run" function', hash.run && 'function' === typeof hash.run);
+    assert('The hash sent to Rule#constructor must have a "run" function', Rule.isRuleHash(hash));
     Object.assign(this, hash);
     Rule.rules.add(this);
   }

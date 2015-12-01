@@ -1,6 +1,6 @@
 /* global Set */
 
-import { assert, cacheProxy, isIterable } from '../modules';
+import { assert, getCache, isIterable } from '../modules';
 import Namespace from './namespace';
 import Rule from './rule';
 
@@ -15,7 +15,7 @@ export default class RuleSet {
 
     set(this, 'content', new Set());
     set(this, 'important', new Set());
-    set(this, 'cache', cacheProxy());
+    set(this, 'cache', new WeakMap());
 
     if( isIterable(iterable) ) {
       this.addMany(iterable);
@@ -23,7 +23,11 @@ export default class RuleSet {
   }
 
   add( rule ) {
-    assert('Must pass a Rule to RuleSet#add', rule instanceof Rule);
+    if( Rule.isRuleHash(rule) ) {
+      rule = new Rule(rule);
+    }
+
+    assert('Must pass a Rule or rule-like has to RuleSet#add', Rule.isRule(rule));
 
     if( rule.important ) {
       get(this, 'important').add(rule);
@@ -34,6 +38,8 @@ export default class RuleSet {
   }
 
   addMany( iterable ) {
+    assert('Must pass an iterable to RuleSet#addMany', isIterable(iterable));
+
     iterable.forEach( ( rule ) => {
       this.add(rule);
     });
@@ -42,9 +48,11 @@ export default class RuleSet {
   }
 
   invoke( roles ) {
+    assert('Must pass an iterable to RuleSet#invoke', isIterable(roles));
+
     let cache = get(this, 'cache');
 
-    return cache(roles, () => {
+    return getCache(cache, roles, () => {
       let important = get(this, 'important');
       let content = get(this, 'content');
 

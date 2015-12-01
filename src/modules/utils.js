@@ -6,20 +6,16 @@ export function assert( message, assertion ) {
   }
 }
 
-export function cacheProxy() {
-  let cache = new Map();
+export function getCache( map, key, callback ) {
+  if( map.has(key) ) {
+    return map.get(key);
+  }
 
-  return function proxy( key, callback ) {
-    if( cache.has(key) ) {
-      return cache.get(key);
-    }
+  let value = callback(key);
+  map.set(key, value);
 
-    let value = callback(key);
-    cache.set(key, value);
-
-    return value;
-  };
-}
+  return value;
+};
 
 export function isIterable( iterable ) {
   if( arguments.length === 0 || iterable == null ) {
