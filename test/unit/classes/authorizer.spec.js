@@ -15,7 +15,7 @@ describe('classes/authorizer', () => {
       }).to.throw(/two arguments/);
     });
 
-    it('should throw Error when passed one arguments', () => {
+    it('should throw Error when passed one argument', () => {
       expect(() => {
         new Authorizer(1);
       }).to.throw(/two arguments/);
