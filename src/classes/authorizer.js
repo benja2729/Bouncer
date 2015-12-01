@@ -1,4 +1,4 @@
-/* global Set */
+/* global Set, TypeError */
 
 import RuleBook from './rulebook';
 import Namespace from './namespace';
@@ -11,8 +11,8 @@ const { get, set } = NAMESPACE.proxies();
 export default class Authorizer {
   constructor( roles, ruleBook ) {
     assert('Must pass two arguments to Authorizer constructor', arguments.length === 2);
-    assert('Must pass a RuleBook as second parameter', ruleBook instanceof RuleBook);
-    assert('Must pass an iterable object for roles', isIterable(roles));
+    assert(new TypeError('Must pass a RuleBook as second parameter'), ruleBook instanceof RuleBook);
+    assert(new TypeError('Must pass an iterable object for roles'), isIterable(roles));
 
     if(! (roles instanceof Set) ) {
       roles = new Set(roles);

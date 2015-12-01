@@ -30,13 +30,13 @@ describe('classes/authorizer', () => {
     it('should expect iterable roles', () => {
       expect(() => {
         new Authorizer(1, new RuleBook());
-      }).to.throw(/iterable/);
+      }).to.throw(TypeError);
     });
 
     it('should expect a RuleBook', () => {
       expect(() => {
         new Authorizer([], 2);
-      }).to.throw(/RuleBook/);
+      }).to.throw(TypeError);
     });
   });
 
