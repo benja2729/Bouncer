@@ -3,6 +3,7 @@
 import RuleSet from './ruleset';
 import Namespace from './namespace';
 import Rule from './rule';
+import { getCache } from '../modules/utils';
 
 // Setup private namespace for class properties
 export const NAMESPACE = new Namespace();
@@ -32,14 +33,11 @@ export default class RuleBook {
   addMany( action, rules ) {
     let content = get(this, 'content'), ruleSet;
 
-    if( content.has(action) ) {
-      ruleSet = content.get(action);
-      ruleSet.addMany(rules);
-    } else {
-      ruleSet = new RuleSet(action, rules);
-      content.set(action, ruleSet);
-    }
+    ruleSet = getCache(content, action, () => {
+      return new RuleSet(action);
+    });
 
+    ruleSet.addMany(rules);
     return this;
   }
 }

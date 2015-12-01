@@ -1,9 +1,11 @@
-/* global Map */
+/* global Map, WeakMap */
 
 /**
  * Inpired by a pattern from an example from Mozilla docs
  * https://developer.mozilla.org/en-US/Add-ons/SDK/Guides/Contributor_s_Guide/Private_Properties#From_WeakMap_to_Namespace
  */
+
+import { getCache } from '../modules/utils';
 
 const handlers = new Map();
 
@@ -39,11 +41,9 @@ export default class Namespace {
     let map = this.content,
         Type = this.namespaceType;
 
-    if(! map.has(instance) ) {
-        map.set(instance, new Type());
-    }
-
-    return map.get(instance);
+    return getCache(map, instance, () => {
+      return new Type();
+    });
   }
 
   proxies( handler ) {

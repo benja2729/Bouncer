@@ -1,4 +1,3 @@
-/* global Map */
 
 export function assert( message, assertion ) {
   if(! assertion ) {
@@ -11,11 +10,13 @@ export function getCache( map, key, callback ) {
     return map.get(key);
   }
 
-  let value = callback(key);
+  assert(new TypeError('Must pass a callback function'), 'function' === typeof callback);
+
+  let value = callback(key, map);
   map.set(key, value);
 
   return value;
-};
+}
 
 export function isIterable( iterable ) {
   if( arguments.length === 0 || iterable == null ) {
