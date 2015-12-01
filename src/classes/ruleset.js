@@ -22,12 +22,16 @@ export default class RuleSet {
     }
   }
 
+  has( rule ) {
+    return get(this, 'content').has(rule);
+  }
+
   add( rule ) {
     if( Rule.isRuleHash(rule) ) {
       rule = new Rule(rule);
     }
 
-    assert('Must pass a Rule or rule-like has to RuleSet#add', Rule.isRule(rule));
+    assert('Must pass a Rule or rule-like hash to RuleSet#add', rule instanceof Rule);
 
     if( rule.important ) {
       get(this, 'important').add(rule);

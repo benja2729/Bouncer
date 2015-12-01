@@ -7,12 +7,8 @@ export const STORE = new Store();
 export default class Rule {
   static get rules() { return STORE; }
 
-  static isRule( instance ) {
-    return instance instanceof this;
-  }
-
   static isRuleHash( hash ) {
-    return 'object' === typeof hash && !this.isRule(hash) && 'function' === typeof hash.run;
+    return !( hash instanceof this ) && 'object' === typeof hash && 'function' === typeof hash.run;
   }
 
   constructor( hash ) {
