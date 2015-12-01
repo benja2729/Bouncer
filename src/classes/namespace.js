@@ -29,6 +29,16 @@ handlers.set(Map, {
   }
 });
 
+handlers.set(WeakMap, {
+  set: (target, name, value) => {
+    target.set(name, value);
+  },
+
+  get: (target, name) => {
+    return target.get(name);
+  }
+});
+
 export default class Namespace {
   static get handlers() { return handlers; }
 
