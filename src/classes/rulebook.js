@@ -2,7 +2,7 @@
 
 import RuleSet from './ruleset';
 import Namespace from './namespace';
-import Rule from './rule';
+import { STORE } from './rule';
 import { getCache } from '../modules/utils';
 
 // Setup private namespace for class properties
@@ -14,7 +14,7 @@ export default class RuleBook {
     set(this, 'content', new Map());
 
     if( 'function' === typeof callback ) {
-      callback.call(this, Rule.rules);
+      callback(this, STORE);
     }
   }
 

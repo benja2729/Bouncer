@@ -8,6 +8,19 @@ const { get, set } = NAMESPACE.proxies();
 
 describe('classes/authorizer', () => {
 
+  describe('static create()', () => {
+    it('should require an init function', () => {
+      expect(() => {
+        Authorizer.create();
+      }).to.throw(TypeError);
+    });
+
+    it('should return an Authorizer instance', () => {
+      let instance = Authorizer.create([], () => {});
+      expect(instance).to.be.instanceof(Authorizer);
+    });
+  });
+
   describe('constructor()', () => {
     it('should throw Error when passed no arguments', () => {
       expect(() => {
@@ -49,9 +62,9 @@ describe('classes/authorizer', () => {
       run: () => { return false; }
     });
 
-    const ruleBook = new RuleBook(function() {
-      this.add('passing_action', passingRule);
-      this.add('failing_action', failingRule);
+    const ruleBook = new RuleBook( (book) => {
+      book.add('passing_action', passingRule);
+      book.add('failing_action', failingRule);
     });
 
     const authorizer = new Authorizer([], ruleBook);

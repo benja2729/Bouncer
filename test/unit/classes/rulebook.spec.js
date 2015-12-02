@@ -14,35 +14,36 @@ describe('classes/rulebook', () => {
     run: () => { return false; }
   });
 
-  let book;
+  let book, content;
 
   beforeEach(() => {
     book = new RuleBook();
+    content = get(book, 'content');
   });
 
   afterEach(() => {
     book = null;
   });
 
-  describe('constructor', () => {
+  describe('constructor()', () => {
     it('should accept an init function', () => {
       expect(() => {
         new RuleBook(() => {});
       }).to.not.throw(Error);
     });
 
-    it('should properly set "this" in the init function', () => {
-      let book, context;
-      book = new RuleBook(function() {
-        context = this;
+    it('should pass instance to init function as first parameter', () => {
+      let context, book;
+      book = new RuleBook( ( ruleBook ) => {
+        context = ruleBook;
       });
 
-      expect(book).to.equal(context);
+      expect(context).to.equal(book);
     });
 
-    it('should pass RULES to init function as a parameter', () => {
+    it('should pass RULES to init function as second parameter', () => {
       let context;
-      new RuleBook(function(rules) {
+      new RuleBook( ( ruleBook, rules ) => {
         context = rules;
       });
 
@@ -74,16 +75,12 @@ describe('classes/rulebook', () => {
 
   describe('add()', () => {
     it('should register action if not set', () => {
-      let content = get(book, 'content');
-
       book.add('test_action', passingRule);
 
       expect(content.has('test_action')).to.be.true;
     });
 
     it('should add rule to action if not set', () => {
-      let content = get(book, 'content');
-
       book.add('test_action', passingRule);
       let ruleSet = content.get('test_action');
 
@@ -91,10 +88,9 @@ describe('classes/rulebook', () => {
     });
 
     it('should add rule to action if set', () => {
-      let content = get(book, 'content'),
-          rule = new Rule({
-            run: () => { return true; }
-          }), result;
+      let rule = new Rule({
+        run: () => { return true; }
+      }), result;
 
       content.set('test_action', new RuleSet('test_action', [rule]));
       book.add('test_action', passingRule);
@@ -108,29 +104,24 @@ describe('classes/rulebook', () => {
 
   describe('addMany()', () => {
     it('should register action if not set', () => {
-      let content = get(book, 'content');
-
       book.addMany('test_action', []);
 
       expect(content.has('test_action')).to.be.true;
     });
 
     it('should add rules to action if not set', () => {
-      let content = get(book, 'content'), result;
-
       book.addMany('test_action', [failingRule, passingRule]);
       let ruleSet = content.get('test_action');
 
-      result = ruleSet.has(failingRule) && ruleSet.has(passingRule);
+      let result = ruleSet.has(failingRule) && ruleSet.has(passingRule);
 
       expect(result).to.be.true;
     });
 
     it('should add rules to action if set', () => {
-      let content = get(book, 'content'),
-          rule = new Rule({
-            run: () => { return true; }
-          }), result;
+      let rule = new Rule({
+        run: () => { return true; }
+      }), result;
 
       content.set('test_action', new RuleSet('test_action', [rule]));
       book.addMany('test_action', [failingRule, passingRule]);
