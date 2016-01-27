@@ -1,4 +1,4 @@
-/* global Set */
+/* global Set, TypeError */
 
 import { assert, getCache, isIterable } from '../modules';
 import Namespace from './namespace';
@@ -10,7 +10,7 @@ const { get, set } = NAMESPACE.proxies();
 
 export default class RuleSet {
   constructor( action, iterable ) {
-    assert('Must define a RuleSet by action', 'string' === typeof action);
+    assert(new TypeError('Must define a RuleSet by action'), 'string' === typeof action);
     this.action = action;
 
     set(this, 'content', new Set());
@@ -42,7 +42,7 @@ export default class RuleSet {
   }
 
   addMany( iterable ) {
-    assert('Must pass an iterable to RuleSet#addMany', isIterable(iterable));
+    assert(new TypeError('Must pass an iterable to RuleSet#addMany'), isIterable(iterable));
 
     iterable.forEach( ( rule ) => {
       this.add(rule);
@@ -52,7 +52,7 @@ export default class RuleSet {
   }
 
   invoke( roles ) {
-    assert('Must pass an iterable to RuleSet#invoke', isIterable(roles));
+    assert(new TypeError('Must pass an iterable to RuleSet#invoke'), isIterable(roles));
 
     let cache = get(this, 'cache');
 
